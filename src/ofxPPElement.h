@@ -102,6 +102,7 @@ public:
     
     void setPosition(float t);
     void setPositionRandom();
+    void setLoop(bool isLoop);
     
     bool mouseMoved(int x, int y);
     bool mousePressed(int x, int y);
@@ -122,6 +123,7 @@ public:
     bool movieLoaded;
     bool isOverPBar, isOverMovie;
     bool isSetRandom;
+    bool isLoop;
 };
 
 

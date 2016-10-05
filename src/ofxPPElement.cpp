@@ -256,6 +256,11 @@ void ofxPPMovie::setPosition(float t) {
     pctNext = t;
 }
 
+void ofxPPMovie::setLoop(bool isLoop) {
+    this->isLoop = isLoop;
+    movie.setLoopState(isLoop ? OF_LOOP_NORMAL : OF_LOOP_NONE);
+}
+
 void ofxPPMovie::start() {
     if (!loaded) {
         setup();
