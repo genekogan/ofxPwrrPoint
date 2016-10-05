@@ -5,6 +5,7 @@ ofxPPSlide::ofxPPSlide(string name) {
     this->name = name;
     setContentRectangle(0, 0, ofGetWidth(), ofGetHeight());
     index = 0;
+    exported = false;
 }
 
 void ofxPPSlide::setContentRectangle(int x, int y, int w, int h) {
@@ -12,27 +13,52 @@ void ofxPPSlide::setContentRectangle(int x, int y, int w, int h) {
     resize(content);
 }
 
-void ofxPPSlide::addImage(string name_, string path, float x, float y, float w, float h) {
+ofxPPRect * ofxPPSlide::addRect(ofColor color, float x, float y, float w, float h) {
+    ofxPPRect *rect = new ofxPPRect(this, color, x, y, w, h);
+    elements.push_back(rect);
+    return rect;
+}
+
+ofxPPImage * ofxPPSlide::addImage(string name_, string path, float x, float y, float w, float h) {
     ofxPPImage *img = new ofxPPImage(this, name_, path, x, y, w, h);
+    if (exported) {
+        img->loadFromExported();
+    }
     elements.push_back(img);
+    return img;
 }
 
-void ofxPPSlide::addScrollableImage(string name_, string path, float x, float y, float w, float h) {
+ofxPPScrollableImage * ofxPPSlide::addScrollableImage(string name_, string path, float x, float y, float w, float h) {
     ofxPPScrollableImage *img = new ofxPPScrollableImage(this, name_, path, x, y, w, h);
+    if (exported) {
+        img->loadFromExported();
+    }
     elements.push_back(img);
+    return img;
 }
 
-void ofxPPSlide::addMovie(string name_, string path, bool autoPlay, float x, float y, float w, float h) {
+ofxPPMovie * ofxPPSlide::addMovie(string name_, string path, bool autoPlay, float x, float y, float w, float h) {
     ofxPPMovie *mov = new ofxPPMovie(this, name_, path, autoPlay, x, y, w, h);
+    if (exported) {
+        mov->loadFromExported();
+    }
     elements.push_back(mov);
+    return mov;
 }
 
-void ofxPPSlide::addText(ofTrueTypeFont & font, ofColor textColor, string text, float x, float y, float w) {
+ofxPPText * ofxPPSlide::addText(ofTrueTypeFont & font, ofColor textColor, string text, float x, float y, float w) {
     ofxPPText *txt = new ofxPPText(this, font, textColor, text, x, y, w);
+    if (exported) {
+        txt->loadFromExported();
+    }
     elements.push_back(txt);
+    return txt;
 }
 
 void ofxPPSlide::addAction(ofxPPElement *element) {
+    if (exported) {
+        element->loadFromExported();
+    }
     elements.push_back(element);
 }
 
@@ -57,6 +83,14 @@ bool ofxPPSlide::mouseDragged(int mouseX, int mouseY) {
         }
     }
     return mouse;
+}
+
+void ofxPPSlide::keyPressed(int key) {
+    int end = getNextBreakpointSlide();
+    bool mouse = false;
+    for (int i=0; i<elements.size(); i++) {
+        elements[i]->keyPressed(key);
+    }
 }
 
 bool ofxPPSlide::mouseMoved(int mouseX, int mouseY) {
@@ -90,7 +124,7 @@ bool ofxPPSlide::mouseReleased(int mouseX, int mouseY) {
 
 void ofxPPSlide::loadAssets() {
     for (int i=0; i<elements.size(); i++) {
-        //        elements[i]->loadAssets();
+        //elements[i]->loadAssets();
     }
 }
 
@@ -102,12 +136,8 @@ void ofxPPSlide::update() {
 }
 
 void ofxPPSlide::draw() {
-    ofPushStyle();
-    ofSetColor(0,0,255);
-    ofNoFill();
-//    ofDrawRectangle(content);
-    ofPopStyle();
-
+    ofxPPSlide *thisSlide = this;
+    ofNotifyEvent(drawE, thisSlide, this);
     int end = getNextBreakpointSlide();
     for (int i=0; i<end; i++) {
         elements[i]->draw();

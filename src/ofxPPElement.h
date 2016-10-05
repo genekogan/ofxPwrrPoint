@@ -16,6 +16,10 @@ public:
     virtual void update() {}
     virtual void draw();
     
+    virtual void exportAssets() {}
+    virtual void loadFromExported() {exported = true;}
+    
+    virtual void keyPressed(int key);
     virtual bool mouseMoved(int mouseX, int mouseY);
     virtual bool mouseDragged(int mouseX, int mouseY);
     virtual bool mousePressed(int mouseX, int mouseY);
@@ -27,8 +31,16 @@ public:
     float tx, ty, tw, th;
     bool mouseOver;
     bool loaded;
+    bool exported;
 };
 
+
+class ofxPPRect : public ofxPPElement {
+public:
+    ofxPPRect(ofxPPSlide *parent, ofColor color, float x, float y, float w, float h);
+    void draw();    
+    ofColor color;
+};
 
 class ofxPPImage : public ofxPPElement {
 public:
@@ -38,6 +50,13 @@ public:
     void resize(ofRectangle content);
     void draw();
     
+    void exportAssets() {
+        vector<string> p = ofSplitString(path, "/");
+        string newPath = ofToDataPath(p[p.size()-1]);
+        string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofSystem(cmd);
+    }
+
     ofImage img;
     string path;
     ofRectangle rect;
@@ -55,6 +74,13 @@ public:
     void resize(ofRectangle content);
     void update();
     void draw();
+    
+    void exportAssets() {
+        vector<string> p = ofSplitString(path, "/");
+        string newPath = ofToDataPath(p[p.size()-1]);
+        string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofSystem(cmd);
+    }
     
     ofxScrollableImage img;
     float tx, ty, scale, maxScale;
@@ -74,11 +100,28 @@ public:
     void update();
     void draw();
     
+    void setPosition(float t);
+    void setPositionRandom();
+    
+    bool mouseMoved(int x, int y);
+    bool mousePressed(int x, int y);
+    
+    void exportAssets() {
+        vector<string> p = ofSplitString(path, "/");
+        string newPath = ofToDataPath(p[p.size()-1]);
+        string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofSystem(cmd);
+    }
+
     ofVideoPlayer movie;
     string path;
+    float pct, pctNext;
     ofRectangle rect;
+    ofRectangle pBar;
     bool autoPlay;
     bool movieLoaded;
+    bool isOverPBar, isOverMovie;
+    bool isSetRandom;
 };
 
 

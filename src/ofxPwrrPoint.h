@@ -13,6 +13,10 @@ public:
     ofxPwrrPoint();
     ~ofxPwrrPoint();
     
+    bool loadFromExported() {
+        exported = true;
+    }
+
     void setActive(bool active);
     void setPage(int page);
     void setPage(ofxPPSlide * slide);
@@ -42,6 +46,18 @@ public:
     void setContentRectangle(int x, int y, int w, int h);
     
     ofEvent<ofxPPSlide*> drawE;
+    
+    
+    void exportAssets() {
+        for (auto s : slides) {
+            s->exportAssets();
+        }
+    }
+    
+    void prevSegment();
+    void nextSegment();
+    
+    bool exported;
     
 protected:
     

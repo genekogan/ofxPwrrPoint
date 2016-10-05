@@ -4,6 +4,7 @@
 ofxPwrrPoint::ofxPwrrPoint() {
     index = 0;
     setActive(true);
+    exported = false;
 }
 
 ofxPwrrPoint::~ofxPwrrPoint() {
@@ -58,6 +59,9 @@ void ofxPwrrPoint::draw() {
 
 ofxPPSlide * ofxPwrrPoint::addSlide(string name) {
     ofxPPSlide *newSlide = new ofxPPSlide(name);
+    if (exported) {
+        newSlide->loadFromExported();
+    }
     slides.push_back(newSlide);
     return newSlide;
 }
@@ -71,12 +75,30 @@ void ofxPwrrPoint::setPage(ofxPPSlide * slide) {
     }
 }
 
+void ofxPwrrPoint::prevSegment() {
+    if (slides[index]->atBeginning()) {
+        setPage((index - 1 + slides.size()) % slides.size());
+    }
+    else {
+        slides[index]->prev();
+    }
+}
+
+void ofxPwrrPoint::nextSegment() {
+    if (slides[index]->atEnd()) {
+        setPage((index + 1) % slides.size());
+    }
+    else {
+        slides[index]->next();
+    }
+}
+
 bool ofxPwrrPoint::mouseMoved(int mouseX, int mouseY) {
     slides[index]->mouseMoved(mouseX, mouseY);
 }
 
 bool ofxPwrrPoint::mouseReleased(int mouseX, int mouseY) {
-    slides[index]->mousePressed(mouseX, mouseY);
+    slides[index]->mouseReleased(mouseX, mouseY);
 }
 
 bool ofxPwrrPoint::mouseDragged(int mouseX, int mouseY) {
@@ -89,16 +111,19 @@ bool ofxPwrrPoint::mousePressed(int mouseX, int mouseY) {
 
 bool ofxPwrrPoint::keyPressed(int key) {
     if (key == OF_KEY_LEFT) {
-        slides[index]->prev();
+        prevSegment();
     }
     else if (key == OF_KEY_RIGHT) {
-        slides[index]->next();
+        nextSegment();
     }
     else if (key == OF_KEY_UP) {
         setPage((index - 1 + slides.size()) % slides.size());
     }
     else if (key == OF_KEY_DOWN) {
         setPage((index + 1) % slides.size());
+    }
+    else {
+        slides[index]->keyPressed(key);
     }
 }
 

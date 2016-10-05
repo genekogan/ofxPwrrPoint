@@ -17,9 +17,13 @@ To-do
 ### FAQ
 
 **Q:** what does this addon do that PowerPoint or Keynote does not?
+
 **A:** openframeworks
 
+
+
 **Q:** why didn't you implement fancy slide transitions?
+
 **A:** any pull request for fancy slide transitions will be automatically rejected and i will intentionally harm a paper clip.
 
 

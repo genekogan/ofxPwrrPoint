@@ -11,6 +11,7 @@ ofxPPElement::ofxPPElement(ofxPPSlide *parent, string name, float x, float y, fl
     loaded = false;
     box.set(tx * ofGetWidth(), ty * ofGetHeight(), tw * ofGetWidth(), th * ofGetHeight());
     mouseOver = false;
+    exported = false;
 }
 
 void ofxPPElement::resize(ofRectangle content) {
@@ -31,6 +32,9 @@ void ofxPPElement::draw() {
     ofPopMatrix();
 }
 
+void ofxPPElement::keyPressed(int key) {
+}
+
 bool ofxPPElement::mouseMoved(int mouseX, int mouseY) {
     mouseOver = box.inside(mouseX, mouseY);
     return mouseOver;
@@ -48,6 +52,24 @@ bool ofxPPElement::mouseReleased(int mouseX, int mouseY) {
     return mouseOver;
 }
 
+
+//////////////////////////////////////////////////////////////////////
+
+ofxPPRect::ofxPPRect(ofxPPSlide *parent, ofColor color, float x, float y, float w, float h) : ofxPPElement(parent, "rect", x, y, w, h) {
+    this->color = color;
+}
+
+void ofxPPRect::draw() {
+    //ofxPPElement::draw();
+    ofPushMatrix();
+    ofPushStyle();
+    ofSetColor(color);
+    ofDrawRectangle(box.getX(), box.getY(), box.getWidth(), box.getHeight());
+    ofPopStyle();
+    ofPopMatrix();
+}
+
+
 //////////////////////////////////////////////////////////////////////
 
 ofxPPImage::ofxPPImage(ofxPPSlide *parent, string name, string path, float x, float y, float w, float h) : ofxPPElement(parent, name, x, y, w, h) {
@@ -55,7 +77,14 @@ ofxPPImage::ofxPPImage(ofxPPSlide *parent, string name, string path, float x, fl
 }
 
 void ofxPPImage::setup() {
-    img.load(path);
+    if (exported) {
+        vector<string> p = ofSplitString(path, "/");
+        img.load(p[p.size()-1]);
+    }
+    else {
+        img.load(path);
+    }
+    
     
     float iw = img.getWidth();
     float ih = img.getHeight();
@@ -98,8 +127,8 @@ void ofxPPImage::draw() {
     //ofxPPElement::draw();
     ofPushMatrix();
     ofPushStyle();
-    ofTranslate(rect.getX(), rect.getY());
-    img.draw(box.getX(), box.getY());
+    ofTranslate(floor(rect.getX()), floor(rect.getY()));
+    img.draw(floor(box.getX()), floor(box.getY()));
     ofPopStyle();
     ofPopMatrix();
 }
@@ -111,11 +140,18 @@ ofxPPScrollableImage::ofxPPScrollableImage(ofxPPSlide *parent, string name, stri
 }
 
 void ofxPPScrollableImage::setup() {
-    img.setup(path, box.getWidth(), box.getHeight());
+    if (exported) {
+        vector<string> p = ofSplitString(path, "/");
+        img.setup(p[p.size()-1], box.getWidth(), box.getHeight());
+    }
+    else {
+        img.setup(path, box.getWidth(), box.getHeight());
+    }
     maxScale = min(img.getImageWidth() / box.getWidth(), img.getImageHeight() / box.getHeight());
     tx = 0;
     ty = 0;
-    scale = 0.5*maxScale;
+    //scale = 0.5*maxScale;
+    scale = maxScale;
     img.setPosition(tx, ty);
     img.setScale(scale);
 }
@@ -147,7 +183,6 @@ void ofxPPScrollableImage::update() {
     if (mouseOver) {
         tx = ofMap(ofGetMouseX() - box.getX(), 0, box.getWidth(), 0, 1, true);
         ty = ofMap(ofGetMouseY() - box.getY(), 0, box.getHeight(), 0, 1, true);
-        //cout << tx << " " <<ty << endl;
         img.setPosition(tx, ty);
         img.setScale(scale);
     }
@@ -170,11 +205,20 @@ ofxPPMovie::ofxPPMovie(ofxPPSlide *parent, string name, string path, bool autoPl
     this->autoPlay = autoPlay;
     this->path = path;
     movieLoaded = false;
+    isOverPBar = false;
+    isOverMovie = false;
+    isSetRandom = false;
 }
 
 void ofxPPMovie::setup() {
     if (!movieLoaded) {
-        movie.load(path);
+        if (exported) {
+            vector<string> p = ofSplitString(path, "/");
+            movie.load(p[p.size()-1]);
+        }
+        else {
+            movie.load(path);
+        }
         movie.setLoopState(OF_LOOP_NORMAL);
         movieLoaded = true;
     }
@@ -191,6 +235,7 @@ void ofxPPMovie::setup() {
         float h = ih * bw / iw;
         float y = 0.5 * (bh - h);
         rect.set(x, y, w, h);
+        pBar.set(x, y + h - 20, w, 20);
     }
     else {
         float y = 0;
@@ -198,7 +243,17 @@ void ofxPPMovie::setup() {
         float w = iw * bh / ih;
         float x = 0.5 * (bw - w);
         rect.set(x, y, w, h);
+        pBar.set(x, y + h - 20, w, 20);
     }
+}
+
+void ofxPPMovie::setPositionRandom() {
+    setPosition(ofRandom(1));
+}
+
+void ofxPPMovie::setPosition(float t) {
+    isSetRandom = true;
+    pctNext = t;
 }
 
 void ofxPPMovie::start() {
@@ -206,7 +261,9 @@ void ofxPPMovie::start() {
         setup();
         loaded = true;
     }
-    movie.play();
+    if (autoPlay) {
+        movie.play();
+    }
 }
 
 void ofxPPMovie::resize(ofRectangle content) {
@@ -222,6 +279,36 @@ void ofxPPMovie::stop() {
 
 void ofxPPMovie::update() {
     movie.update();
+    pct = (float) movie.getCurrentFrame() / movie.getTotalNumFrames();
+    if (isSetRandom && movie.isInitialized() && movie.isPlaying()) {
+        pct = pctNext;
+        movie.setPosition(pct);
+        isSetRandom = false;
+    }
+}
+
+bool ofxPPMovie::mouseMoved(int x, int y) {
+    float mx = x-box.getX();
+    float my = y-box.getY();
+    isOverPBar = pBar.inside(mx, my);
+    isOverMovie = box.inside(mx, my);
+    return isOverPBar;
+}
+
+bool ofxPPMovie::mousePressed(int x, int y) {
+    if (isOverPBar) {
+        float t = (x - box.getX() - pBar.getX()) / pBar.getWidth();
+        movie.setPosition(t);
+    }
+    else if (isOverMovie) {
+        if (movie.isPlaying()) {
+            movie.stop();
+        }
+        else {
+            movie.play();
+        }
+    }
+    return isOverPBar;
 }
 
 void ofxPPMovie::draw() {
@@ -230,6 +317,14 @@ void ofxPPMovie::draw() {
     ofPushStyle();
     ofTranslate(box.getX(), box.getY());
     movie.draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
+    
+    if (isOverPBar) {
+        ofSetColor(0, 255, 0);
+        ofDrawRectangle(pBar);
+        ofSetColor(0, 0, 255);
+        ofDrawRectangle(pBar.getX(), pBar.getY(), pBar.getWidth()*pct, pBar.getHeight());
+    }
+    
     ofPopStyle();
     ofPopMatrix();
 }

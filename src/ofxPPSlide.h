@@ -10,12 +10,25 @@ class ofxPPSlide {
 public:
     ofxPPSlide(string name);
     
+    bool loadFromExported() {
+        exported = true;
+    }
+    
+    bool atBeginning() {
+        return index == 0;
+    }
+    
+    bool atEnd() {
+        return index == breakpoints.size();
+    }
+    
     string getName() {return name;}
     
-    void addImage(string name_, string path, float x, float y, float w, float h);
-    void addScrollableImage(string name_, string path, float x, float y, float w, float h);
-    void addMovie(string name_, string path, bool autoPlay, float x, float y, float w, float h);
-    void addText(ofTrueTypeFont & font, ofColor textColor, string text, float x, float y, float w);
+    ofxPPRect * addRect(ofColor color, float x, float y, float w, float h);
+    ofxPPImage * addImage(string name_, string path, float x, float y, float w, float h);
+    ofxPPScrollableImage * addScrollableImage(string name_, string path, float x, float y, float w, float h);
+    ofxPPMovie * addMovie(string name_, string path, bool autoPlay, float x, float y, float w, float h);
+    ofxPPText * addText(ofTrueTypeFont & font, ofColor textColor, string text, float x, float y, float w);
     void addAction(ofxPPElement *element);
     
     void addBreakpoint();
@@ -35,12 +48,28 @@ public:
     void setContentRectangle(int x, int y, int w, int h);
     void resize(ofRectangle content);
     
+    void keyPressed(int key);
     bool mouseMoved(int mouseX, int mouseY);
     bool mouseDragged(int mouseX, int mouseY);
     bool mousePressed(int mouseX, int mouseY);
     bool mouseReleased(int mouseX, int mouseY);
 
     ofRectangle content;
+
+    template<typename L, typename M>
+    void setBackgroundFunction(L *listener, M method) {
+        ofAddListener(drawE, listener, method);
+    }
+    
+    ofEvent<ofxPPSlide*> drawE;
+    
+    bool exported;
+    
+    void exportAssets() {
+        for (auto e : elements) {
+            e->exportAssets();
+        }
+    }
 
 protected:
     
