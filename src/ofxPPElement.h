@@ -102,7 +102,7 @@ public:
     
     void setPosition(float t);
     void setPositionRandom();
-    void setLoop(bool isLoop);
+    void setLoop(bool isLoop_);
     
     bool mouseMoved(int x, int y);
     bool mousePressed(int x, int y);

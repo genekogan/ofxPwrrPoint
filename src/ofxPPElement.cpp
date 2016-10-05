@@ -208,6 +208,7 @@ ofxPPMovie::ofxPPMovie(ofxPPSlide *parent, string name, string path, bool autoPl
     isOverPBar = false;
     isOverMovie = false;
     isSetRandom = false;
+    isLoop = true;
 }
 
 void ofxPPMovie::setup() {
@@ -219,7 +220,7 @@ void ofxPPMovie::setup() {
         else {
             movie.load(path);
         }
-        movie.setLoopState(OF_LOOP_NORMAL);
+        movie.setLoopState(isLoop ? OF_LOOP_NORMAL : OF_LOOP_NONE);
         movieLoaded = true;
     }
     
@@ -256,8 +257,8 @@ void ofxPPMovie::setPosition(float t) {
     pctNext = t;
 }
 
-void ofxPPMovie::setLoop(bool isLoop) {
-    this->isLoop = isLoop;
+void ofxPPMovie::setLoop(bool isLoop_) {
+    isLoop = isLoop_;
     movie.setLoopState(isLoop ? OF_LOOP_NORMAL : OF_LOOP_NONE);
 }
 
@@ -322,7 +323,7 @@ void ofxPPMovie::draw() {
     ofPushStyle();
     ofTranslate(box.getX(), box.getY());
     movie.draw(rect.getX(), rect.getY(), rect.getWidth(), rect.getHeight());
-    
+
     if (isOverPBar) {
         ofSetColor(0, 255, 0);
         ofDrawRectangle(pBar);
