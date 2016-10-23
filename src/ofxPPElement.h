@@ -16,8 +16,11 @@ public:
     virtual void update() {}
     virtual void draw();
     
+    virtual void exportAssets(string prefix) {}
     virtual void exportAssets() {}
     virtual void loadFromExported() {exported = true;}
+    virtual bool isVideo() {return false;}
+    virtual bool isScrollableImage() {return false;}
     
     virtual void keyPressed(int key);
     virtual bool mouseMoved(int mouseX, int mouseY);
@@ -49,13 +52,18 @@ public:
     void start();
     void resize(ofRectangle content);
     void draw();
-    
-    void exportAssets() {
+
+    void exportAssets(string prefix) {
         vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath(p[p.size()-1]);
+        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        if (prefix != "") {
+            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
+        }
         string cmd = "cp \""+path+"\" \""+newPath+"\";";
         ofSystem(cmd);
     }
+    
+    void exportAssets() {exportAssets("");};
 
     ofImage img;
     string path;
@@ -75,12 +83,19 @@ public:
     void update();
     void draw();
     
-    void exportAssets() {
+    bool isScrollableImage() {return true;}
+
+    void exportAssets(string prefix) {
         vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath(p[p.size()-1]);
+        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        if (prefix != "") {
+            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
+        }
         string cmd = "cp \""+path+"\" \""+newPath+"\";";
         ofSystem(cmd);
     }
+    
+    void exportAssets() {exportAssets("");};
     
     ofxScrollableImage img;
     float tx, ty, scale, maxScale;
@@ -107,12 +122,20 @@ public:
     bool mouseMoved(int x, int y);
     bool mousePressed(int x, int y);
     
-    void exportAssets() {
+    bool isVideo() {return true;}
+
+    void exportAssets(string prefix) {
         vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath(p[p.size()-1]);
+        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        if (prefix != "") {
+            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
+        }
         string cmd = "cp \""+path+"\" \""+newPath+"\";";
         ofSystem(cmd);
     }
+    
+    void exportAssets() {exportAssets("");};
+
 
     ofVideoPlayer movie;
     string path;

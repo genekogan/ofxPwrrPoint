@@ -10,17 +10,9 @@ class ofxPPSlide {
 public:
     ofxPPSlide(string name);
     
-    bool loadFromExported() {
-        exported = true;
-    }
-    
-    bool atBeginning() {
-        return index == 0;
-    }
-    
-    bool atEnd() {
-        return index == breakpoints.size();
-    }
+    bool loadFromExported() {exported = true;}
+    bool atBeginning() {return index == 0;}
+    bool atEnd() {return index == breakpoints.size();}
     
     string getName() {return name;}
     
@@ -54,22 +46,15 @@ public:
     bool mousePressed(int mouseX, int mouseY);
     bool mouseReleased(int mouseX, int mouseY);
 
-    ofRectangle content;
-
     template<typename L, typename M>
     void setBackgroundFunction(L *listener, M method) {
         ofAddListener(drawE, listener, method);
     }
     
+    void exportAssets();
+    void exportVideosAndScrollableImages(string prefix);
+
     ofEvent<ofxPPSlide*> drawE;
-    
-    bool exported;
-    
-    void exportAssets() {
-        for (auto e : elements) {
-            e->exportAssets();
-        }
-    }
 
 protected:
     
@@ -79,4 +64,6 @@ protected:
     vector<int> breakpoints;
     string name;
     int index, end;
+    bool exported;
+    ofRectangle content;
 };

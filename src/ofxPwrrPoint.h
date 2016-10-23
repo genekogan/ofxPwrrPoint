@@ -13,9 +13,7 @@ public:
     ofxPwrrPoint();
     ~ofxPwrrPoint();
     
-    bool loadFromExported() {
-        exported = true;
-    }
+    bool loadFromExported() {exported = true;}
 
     void setActive(bool active);
     void setPage(int page);
@@ -26,6 +24,8 @@ public:
     void update();
     void draw();
     
+    int getIndex() {return index;}
+    int getNumSlides() {return slides.size();}
     void printStats();
     
     ofxPPSlide * addSlide(string name);
@@ -47,13 +47,9 @@ public:
     
     ofEvent<ofxPPSlide*> drawE;
     
-    
-    void exportAssets() {
-        for (auto s : slides) {
-            s->exportAssets();
-        }
-    }
-    
+    void exportAssets();
+    void exportScreenshots();
+
     void prevSegment();
     void nextSegment();
     
@@ -67,8 +63,11 @@ protected:
     void mouseReleased(ofMouseEventArgs &evt);
     void keyPressed(ofKeyEventArgs &evt);
     
+    void exportScreenshotsSave();
+
     vector<ofxPPSlide*> slides;
     int index;
     bool preloaded;
+    bool toExportSlides;
     ofRectangle content;
 };

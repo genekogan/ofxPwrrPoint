@@ -5,6 +5,7 @@ ofxPwrrPoint::ofxPwrrPoint() {
     index = 0;
     setActive(true);
     exported = false;
+    toExportSlides = false;
 }
 
 ofxPwrrPoint::~ofxPwrrPoint() {
@@ -53,6 +54,10 @@ void ofxPwrrPoint::update() {
 }
 
 void ofxPwrrPoint::draw() {
+    if (ofGetFrameNum() == 3) {
+        exportScreenshotsSave();
+        toExportSlides = false;
+    }
     ofNotifyEvent(drawE, slides[index], this);
     slides[index]->draw();
 }
@@ -162,3 +167,34 @@ void ofxPwrrPoint::printStats() {
     }
     cout << "slides " << s << " " << s2 << endl;
 }
+
+void ofxPwrrPoint::exportAssets() {
+    for (auto s : slides) {
+        s->exportAssets();
+    }
+}
+
+void ofxPwrrPoint::exportScreenshots() {
+    toExportSlides = true;
+}
+
+void ofxPwrrPoint::exportScreenshotsSave() {
+    int slide = 0;
+    bool finished = false;
+    bool started = false;
+    while (!finished) {
+        ofNotifyEvent(drawE, slides[index], this);
+        slides[index]->draw();
+        slides[index]->exportVideosAndScrollableImages("export/media/slide"+ofToString(slide+1, 3, '0'));
+        ofSaveScreen("export/slide"+ofToString(slide+1, 3, '0')+".png");
+        slide++;
+        nextSegment();
+        if (index == 1) {
+            started = true;
+        }
+        if (started && index == 0) {
+            finished = true;
+        }
+    }
+}
+

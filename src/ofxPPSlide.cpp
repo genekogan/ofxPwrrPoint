@@ -184,3 +184,19 @@ void ofxPPSlide::resize(ofRectangle content) {
     }
 }
 
+void ofxPPSlide::exportAssets() {
+    for (auto e : elements) {
+        e->exportAssets();
+    }
+}
+
+void ofxPPSlide::exportVideosAndScrollableImages(string prefix) {
+    for (auto e : elements) {
+        if (e->isVideo()) {
+            e->exportAssets(prefix);
+        }
+        if (e->isScrollableImage()) {
+            e->exportAssets(prefix);
+        }
+    }
+}
