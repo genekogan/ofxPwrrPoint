@@ -111,6 +111,7 @@ void ofxPPImage::setup() {
 
 void ofxPPImage::start() {
     if (!loaded) {
+        cout << "LOAD IMAGE "<<endl;
         setup();
         loaded = true;
     }

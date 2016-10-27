@@ -3,9 +3,13 @@
 
 ofxPwrrPoint::ofxPwrrPoint() {
     index = 0;
-    setActive(true);
+    //setActive(true);
     exported = false;
     toExportSlides = false;
+    guiWindowWidth = 1024;
+    guiWindowHeight = 800;
+    notesFontSize = 20;
+    notesFont.load("/Users/gene/Code/of_v0.9.0_osx_release/addons/ofxLibwebsockets/example_server_binary/bin/data/myriad.ttf", notesFontSize);
 }
 
 ofxPwrrPoint::~ofxPwrrPoint() {
@@ -54,7 +58,7 @@ void ofxPwrrPoint::update() {
 }
 
 void ofxPwrrPoint::draw() {
-    if (ofGetFrameNum() == 3) {
+    if (ofGetFrameNum() == 1 && toExportSlides) {
         exportScreenshotsSave();
         toExportSlides = false;
     }
@@ -99,6 +103,8 @@ void ofxPwrrPoint::nextSegment() {
 }
 
 bool ofxPwrrPoint::mouseMoved(int mouseX, int mouseY) {
+    cout << "slide mx " << mouseX << " " << mouseY << endl;
+
     slides[index]->mouseMoved(mouseX, mouseY);
 }
 
@@ -165,7 +171,7 @@ void ofxPwrrPoint::printStats() {
         s += 1;
         s2 += (1 + slides[i]->getBreakpoints().size());
     }
-    cout << "slides " << s << " " << s2 << endl;
+    ofLog(OF_LOG_NOTICE, "slides "+ofToString(s)+", breakpoints "+ofToString(s2));
 }
 
 void ofxPwrrPoint::exportAssets() {
@@ -198,3 +204,56 @@ void ofxPwrrPoint::exportScreenshotsSave() {
     }
 }
 
+void ofxPwrrPoint::setupGui() {
+    ofSetWindowShape(guiWindowWidth, guiWindowHeight);
+    ofBackground(0);
+}
+
+void ofxPwrrPoint::drawGui() {
+    notesFont.drawString(notes[index], 10, 30);
+}
+
+void ofxPwrrPoint::wrapNotes() {
+    notes.clear();
+    for (int idx=0; idx<slides.size(); idx++) {
+        vector<string> slideNotes = slides[idx]->getNotes();
+        string noteString = "";
+        for (int i=0; i<slideNotes.size(); i++) {
+            noteString += slideNotes[i];
+            noteString += " \n\n";
+        }
+        string typeWrapped = "";
+        string tempString = "";
+        
+        vector <string> words = ofSplitString(noteString, " ");
+        for(int i=0; i<words.size(); i++) {
+            string wrd = words[i];
+            tempString += wrd + " ";
+            int stringwidth = notesFont.stringWidth(tempString);
+            if(stringwidth >= guiWindowWidth-120) {
+                tempString = "";
+                typeWrapped += "\n";
+            }
+            typeWrapped += wrd + " ";
+        }
+        
+        /*
+        vector <string> lines = ofSplitString(noteString, "\n");
+        for (int l=0; l<lines.size(); l++) {
+            vector <string> words = ofSplitString(lines[l], " ");
+            for(int i=0; i<words.size(); i++) {
+                string wrd = words[i];
+                tempString += wrd + " ";
+                int stringwidth = notesFont.stringWidth(tempString);
+                if(stringwidth >= guiWindowWidth-120) {
+                    tempString = "";
+                    typeWrapped += "\n";
+                }
+                typeWrapped += wrd + " ";
+            }
+            typeWrapped += "\n";
+        }
+         */
+        notes.push_back(typeWrapped);
+    }
+}

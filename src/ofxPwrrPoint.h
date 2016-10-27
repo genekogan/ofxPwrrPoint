@@ -53,6 +53,10 @@ public:
     void prevSegment();
     void nextSegment();
     
+    void setupGui();
+    void drawGui();
+    void wrapNotes();
+    
     bool exported;
     
 protected:
@@ -66,8 +70,13 @@ protected:
     void exportScreenshotsSave();
 
     vector<ofxPPSlide*> slides;
+    vector<string> notes;
+    
     int index;
     bool preloaded;
     bool toExportSlides;
     ofRectangle content;
+    
+    ofTrueTypeFont notesFont;
+    int notesFontSize, guiWindowWidth, guiWindowHeight;
 };

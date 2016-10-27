@@ -24,7 +24,10 @@ public:
     void addAction(ofxPPElement *element);
     
     void addBreakpoint();
+    void addNote(string note) {notes.push_back(note);}
+
     vector<int> & getBreakpoints() {return breakpoints;}
+    vector<string> & getNotes() {return notes;}
     
     void loadAssets();
     
@@ -62,6 +65,7 @@ protected:
     
     vector<ofxPPElement*> elements;
     vector<int> breakpoints;
+    vector<string> notes;
     string name;
     int index, end;
     bool exported;
