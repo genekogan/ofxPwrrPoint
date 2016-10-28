@@ -44,6 +44,10 @@ bool ofxPPElement::mouseDragged(int mouseX, int mouseY) {
     return mouseOver;
 }
 
+bool ofxPPElement::mouseScrolled(float scrollX, float scrollY) {
+    return mouseOver;
+}
+
 bool ofxPPElement::mousePressed(int mouseX, int mouseY) {
     return mouseOver;
 }
@@ -111,7 +115,6 @@ void ofxPPImage::setup() {
 
 void ofxPPImage::start() {
     if (!loaded) {
-        cout << "LOAD IMAGE "<<endl;
         setup();
         loaded = true;
     }
@@ -161,9 +164,9 @@ bool ofxPPScrollableImage::mouseMoved(int mouseX, int mouseY) {
     ofxPPElement::mouseMoved(mouseX, mouseY);
 }
 
-bool ofxPPScrollableImage::mouseDragged(int mouseX, int mouseY) {
+bool ofxPPScrollableImage::mouseScrolled(float scrollX, float scrollY) {
     if (mouseOver) {
-        scale = ofClamp(scale + 0.005 * (mouseY - py), 0.5, maxScale);
+        scale = ofClamp(scale - 0.015 * scrollY, 0.5, maxScale);
     }
 }
 

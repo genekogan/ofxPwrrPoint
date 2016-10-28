@@ -48,6 +48,7 @@ public:
     bool mouseDragged(int mouseX, int mouseY);
     bool mousePressed(int mouseX, int mouseY);
     bool mouseReleased(int mouseX, int mouseY);
+    bool mouseScrolled(float scrollX, float scrollY);
 
     template<typename L, typename M>
     void setBackgroundFunction(L *listener, M method) {

@@ -85,6 +85,17 @@ bool ofxPPSlide::mouseDragged(int mouseX, int mouseY) {
     return mouse;
 }
 
+bool ofxPPSlide::mouseScrolled(float scrollX, float scrollY) {
+    int end = getNextBreakpointSlide();
+    bool mouse = false;
+    for (int i=0; i<end; i++) {
+        if (elements[i]->mouseScrolled(scrollX, scrollY)) {
+            mouse = true;
+        }
+    }
+    return mouse;
+}
+
 void ofxPPSlide::keyPressed(int key) {
     int end = getNextBreakpointSlide();
     bool mouse = false;

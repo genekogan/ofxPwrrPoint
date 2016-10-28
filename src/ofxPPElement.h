@@ -27,6 +27,7 @@ public:
     virtual bool mouseDragged(int mouseX, int mouseY);
     virtual bool mousePressed(int mouseX, int mouseY);
     virtual bool mouseReleased(int mouseX, int mouseY);
+    virtual bool mouseScrolled(float scrollX, float scrollY);
     
     ofxPPSlide *parent;
     ofRectangle box;
@@ -77,7 +78,7 @@ public:
     
     void setup();
     bool mouseMoved(int mouseX, int mouseY);
-    bool mouseDragged(int mouseX, int mouseY);
+    bool mouseScrolled(float scrollX, float scrollY);
     void start();
     void resize(ofRectangle content);
     void update();

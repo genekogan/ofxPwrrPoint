@@ -10,6 +10,9 @@ ofxPwrrPoint::ofxPwrrPoint() {
     guiWindowHeight = 800;
     notesFontSize = 20;
     notesFont.load("/Users/gene/Code/of_v0.9.0_osx_release/addons/ofxLibwebsockets/example_server_binary/bin/data/myriad.ttf", notesFontSize);
+    
+    // mouse scroll can be done separately
+    ofAddListener(ofEvents().mouseScrolled, this, &ofxPwrrPoint::mouseScrolled);
 }
 
 ofxPwrrPoint::~ofxPwrrPoint() {
@@ -103,8 +106,6 @@ void ofxPwrrPoint::nextSegment() {
 }
 
 bool ofxPwrrPoint::mouseMoved(int mouseX, int mouseY) {
-    cout << "slide mx " << mouseX << " " << mouseY << endl;
-
     slides[index]->mouseMoved(mouseX, mouseY);
 }
 
@@ -114,6 +115,10 @@ bool ofxPwrrPoint::mouseReleased(int mouseX, int mouseY) {
 
 bool ofxPwrrPoint::mouseDragged(int mouseX, int mouseY) {
     slides[index]->mouseDragged(mouseX, mouseY);
+}
+
+bool ofxPwrrPoint::mouseScrolled(float scrollX, float scrollY) {
+    slides[index]->mouseScrolled(scrollX, scrollY);
 }
 
 bool ofxPwrrPoint::mousePressed(int mouseX, int mouseY) {
@@ -148,6 +153,10 @@ void ofxPwrrPoint::mousePressed(ofMouseEventArgs &evt){
 
 void ofxPwrrPoint::mouseDragged(ofMouseEventArgs &evt){
     mouseDragged(evt.x, evt.y);
+}
+
+void ofxPwrrPoint::mouseScrolled(ofMouseEventArgs &evt) {
+    mouseScrolled(evt.scrollX, evt.scrollY);
 }
 
 void ofxPwrrPoint::mouseReleased(ofMouseEventArgs &evt){
@@ -236,24 +245,6 @@ void ofxPwrrPoint::wrapNotes() {
             }
             typeWrapped += wrd + " ";
         }
-        
-        /*
-        vector <string> lines = ofSplitString(noteString, "\n");
-        for (int l=0; l<lines.size(); l++) {
-            vector <string> words = ofSplitString(lines[l], " ");
-            for(int i=0; i<words.size(); i++) {
-                string wrd = words[i];
-                tempString += wrd + " ";
-                int stringwidth = notesFont.stringWidth(tempString);
-                if(stringwidth >= guiWindowWidth-120) {
-                    tempString = "";
-                    typeWrapped += "\n";
-                }
-                typeWrapped += wrd + " ";
-            }
-            typeWrapped += "\n";
-        }
-         */
         notes.push_back(typeWrapped);
     }
 }

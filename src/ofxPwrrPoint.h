@@ -33,6 +33,7 @@ public:
     bool mouseMoved(int mouseX, int mouseY);
     bool mousePressed(int mouseX, int mouseY);
     bool mouseDragged(int mouseX, int mouseY);
+    bool mouseScrolled(float scrollX, float scrollY);
     bool mouseReleased(int mouseX, int mouseY);
     bool keyPressed(int key);
     
@@ -64,6 +65,7 @@ protected:
     void mouseMoved(ofMouseEventArgs &evt);
     void mousePressed(ofMouseEventArgs &evt);
     void mouseDragged(ofMouseEventArgs &evt);
+    void mouseScrolled(ofMouseEventArgs &evt);
     void mouseReleased(ofMouseEventArgs &evt);
     void keyPressed(ofKeyEventArgs &evt);
     
