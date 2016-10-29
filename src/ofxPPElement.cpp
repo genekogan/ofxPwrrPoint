@@ -160,10 +160,6 @@ void ofxPPScrollableImage::setup() {
     img.setScale(scale);
 }
 
-bool ofxPPScrollableImage::mouseMoved(int mouseX, int mouseY) {
-    ofxPPElement::mouseMoved(mouseX, mouseY);
-}
-
 bool ofxPPScrollableImage::mouseScrolled(float scrollX, float scrollY) {
     if (mouseOver) {
         scale = ofClamp(scale - 0.015 * scrollY, 0.5, maxScale);
@@ -334,6 +330,143 @@ void ofxPPMovie::draw() {
         ofSetColor(0, 0, 255);
         ofDrawRectangle(pBar.getX(), pBar.getY(), pBar.getWidth()*pct, pBar.getHeight());
     }
+    
+    ofPopStyle();
+    ofPopMatrix();
+}
+
+
+//////////////////////////////////////////////////////////////////////
+
+ofxPPSound::ofxPPSound(ofxPPSlide *parent, string name, string path, bool autoPlay, bool isLoop, float x, float y, float w) : ofxPPElement(parent, name, x, y, w, 0.2 * w) {
+    this->autoPlay = autoPlay;
+    this->isLoop = isLoop;
+    this->path = path;
+    soundLoaded = false;
+    isOverPBar = false;
+    isOverSound = false;
+    isSetRandom = false;
+    isPaused = false;
+    isLoop = true;
+}
+
+void ofxPPSound::setup() {
+    if (!soundLoaded) {
+        if (exported) {
+            vector<string> p = ofSplitString(path, "/");
+            sound.load(p[p.size()-1]);
+        }
+        else {
+            sound.load(path);
+        }
+        sound.setLoop(isLoop);
+        soundLoaded = true;
+    }
+    
+    float w = box.getWidth();
+    float h = box.getHeight();
+    float pb = h;
+    float x = 0;
+    float y = 0;
+    
+    rect.set(x, y, w, h);
+    pBar.set(x+pb, y, w-pb, h);
+}
+
+void ofxPPSound::setPositionRandom() {
+    setPosition(ofRandom(1));
+}
+
+void ofxPPSound::setPosition(float t) {
+    isSetRandom = true;
+    pctNext = t;
+}
+
+void ofxPPSound::setLoop(bool isLoop_) {
+    isLoop = isLoop_;
+    sound.setLoop(isLoop);
+}
+
+void ofxPPSound::start() {
+    if (!loaded) {
+        setup();
+        loaded = true;
+    }
+    if (autoPlay) {
+        sound.play();
+    }
+}
+
+void ofxPPSound::resize(ofRectangle content) {
+    ofxPPElement::resize(content);
+    if (loaded) {
+        setup();
+    }
+}
+
+void ofxPPSound::stop() {
+    sound.stop();
+}
+
+void ofxPPSound::update() {
+    pct = sound.getPosition();
+    if (isSetRandom && sound.isLoaded() && sound.isPlaying()) {
+        pct = pctNext;
+        sound.setPosition(pct);
+        isSetRandom = false;
+    }
+    ofSoundUpdate();
+}
+
+bool ofxPPSound::mouseMoved(int x, int y) {
+    float mx = x-box.getX();
+    float my = y-box.getY();
+    isOverPBar = pBar.inside(mx, my);
+    isOverSound = rect.inside(mx, my);
+    return isOverPBar;
+}
+
+bool ofxPPSound::mousePressed(int x, int y) {
+    if (isOverPBar) {
+        float t = (x - box.getX() - pBar.getX()) / pBar.getWidth();
+        sound.setPosition(t);
+    }
+    else if (isOverSound) {
+        if (sound.isPlaying()) {
+            isPaused = !isPaused;
+            sound.setPaused(isPaused);
+        }
+        else {
+            sound.play();
+        }
+    }
+    return isOverPBar;
+}
+
+void ofxPPSound::draw() {
+    //ofxPPElement::draw();
+    ofPushMatrix();
+    ofPushStyle();
+    ofTranslate(box.getX(), box.getY());
+    
+    ofSetColor(0);
+    ofDrawRectangle(rect);
+
+    
+    ofSetColor((isOverSound && !isOverPBar) ? ofColor(0, 255, 0) : ofColor(150));
+    if (!sound.isPlaying() || isPaused) {
+        ofDrawTriangle(rect.getX() + rect.getHeight()*0.1, rect.getY() + rect.getHeight()*0.1,
+                       rect.getX() + rect.getHeight()*0.1, rect.getY() + rect.getHeight()*0.9,
+                       rect.getX() + rect.getHeight()*0.9, rect.getY() + rect.getHeight()*0.5);
+    } else {
+        ofDrawRectangle(rect.getX() + rect.getHeight()*0.1, rect.getY() + rect.getHeight()*0.1, rect.getHeight() * 0.3, rect.getHeight() * 0.8);
+        ofDrawRectangle(rect.getX() + rect.getHeight()*0.6, rect.getY() + rect.getHeight()*0.1, rect.getHeight() * 0.3, rect.getHeight() * 0.8);
+    }
+    
+    ofSetColor(150);
+    ofDrawRectangle(pBar);
+    ofSetColor(0, 0, 255);
+    ofDrawRectangle(pBar.getX(), pBar.getY(), pBar.getWidth()*pct, pBar.getHeight());
     
     ofPopStyle();
     ofPopMatrix();

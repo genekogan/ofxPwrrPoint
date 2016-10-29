@@ -46,6 +46,15 @@ ofxPPMovie * ofxPPSlide::addMovie(string name_, string path, bool autoPlay, floa
     return mov;
 }
 
+ofxPPSound * ofxPPSlide::addSound(string name_, string path, bool autoPlay, bool loop, float x, float y, float w) {
+    ofxPPSound *wav = new ofxPPSound(this, name_, path, autoPlay, loop, x, y, w);
+    if (exported) {
+        wav->loadFromExported();
+    }
+    elements.push_back(wav);
+    return wav;
+}
+
 ofxPPText * ofxPPSlide::addText(ofTrueTypeFont & font, ofColor textColor, string text, float x, float y, float w) {
     ofxPPText *txt = new ofxPPText(this, font, textColor, text, x, y, w);
     if (exported) {

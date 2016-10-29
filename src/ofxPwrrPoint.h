@@ -68,6 +68,7 @@ protected:
     void mouseScrolled(ofMouseEventArgs &evt);
     void mouseReleased(ofMouseEventArgs &evt);
     void keyPressed(ofKeyEventArgs &evt);
+    void checkKeyEvents();
     
     void exportScreenshotsSave();
 
@@ -81,4 +82,7 @@ protected:
     
     ofTrueTypeFont notesFont;
     int notesFontSize, guiWindowWidth, guiWindowHeight;
+    
+    bool isKeyEvent;
+    int key;
 };

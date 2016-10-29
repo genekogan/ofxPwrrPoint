@@ -20,6 +20,7 @@ public:
     virtual void exportAssets() {}
     virtual void loadFromExported() {exported = true;}
     virtual bool isVideo() {return false;}
+    virtual bool isAudio() {return false;}
     virtual bool isScrollableImage() {return false;}
     
     virtual void keyPressed(int key);
@@ -77,7 +78,7 @@ public:
     ofxPPScrollableImage(ofxPPSlide *parent, string name, string path, float x, float y, float w, float h);
     
     void setup();
-    bool mouseMoved(int mouseX, int mouseY);
+//    bool mouseMoved(int mouseX, int mouseY);
     bool mouseScrolled(float scrollX, float scrollY);
     void start();
     void resize(ofRectangle content);
@@ -149,6 +150,53 @@ public:
     bool isSetRandom;
     bool isLoop;
 };
+
+
+class ofxPPSound : public ofxPPElement {
+public:
+    ofxPPSound(ofxPPSlide *parent, string name, string path, bool autoPlay, bool isLoop, float x, float y, float w);
+    
+    void setup();
+    void start();
+    void resize(ofRectangle content);
+    void stop();
+    void update();
+    void draw();
+    
+    void setPosition(float t);
+    void setPositionRandom();
+    void setLoop(bool isLoop_);
+    
+    bool mouseMoved(int x, int y);
+    bool mousePressed(int x, int y);
+    
+    bool isAudio() {return true;}
+    
+    void exportAssets(string prefix) {
+        vector<string> p = ofSplitString(path, "/");
+        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        if (prefix != "") {
+            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
+        }
+        string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofSystem(cmd);
+    }
+    
+    void exportAssets() {exportAssets("");};
+    
+    ofSoundPlayer sound;
+    string path;
+    float pct, pctNext;
+    ofRectangle rect;
+    ofRectangle pBar;
+    bool autoPlay;
+    bool isPaused;
+    bool soundLoaded;
+    bool isOverPBar, isOverSound;
+    bool isSetRandom;
+    bool isLoop;
+};
+
 
 
 class ofxPPText : public ofxPPElement {

@@ -6,13 +6,13 @@ ofxPwrrPoint::ofxPwrrPoint() {
     //setActive(true);
     exported = false;
     toExportSlides = false;
-    guiWindowWidth = 1024;
+    guiWindowWidth = 720;
     guiWindowHeight = 800;
     notesFontSize = 20;
     notesFont.load("/Users/gene/Code/of_v0.9.0_osx_release/addons/ofxLibwebsockets/example_server_binary/bin/data/myriad.ttf", notesFontSize);
     
     // mouse scroll can be done separately
-    ofAddListener(ofEvents().mouseScrolled, this, &ofxPwrrPoint::mouseScrolled);
+   // ofAddListener(ofEvents().mouseScrolled, this, &ofxPwrrPoint::mouseScrolled);
 }
 
 ofxPwrrPoint::~ofxPwrrPoint() {
@@ -67,6 +67,7 @@ void ofxPwrrPoint::draw() {
     }
     ofNotifyEvent(drawE, slides[index], this);
     slides[index]->draw();
+    checkKeyEvents();
 }
 
 ofxPPSlide * ofxPwrrPoint::addSlide(string name) {
@@ -106,26 +107,37 @@ void ofxPwrrPoint::nextSegment() {
 }
 
 bool ofxPwrrPoint::mouseMoved(int mouseX, int mouseY) {
-    slides[index]->mouseMoved(mouseX, mouseY);
+    return slides[index]->mouseMoved(mouseX, mouseY);
 }
 
 bool ofxPwrrPoint::mouseReleased(int mouseX, int mouseY) {
-    slides[index]->mouseReleased(mouseX, mouseY);
+    return slides[index]->mouseReleased(mouseX, mouseY);
 }
 
 bool ofxPwrrPoint::mouseDragged(int mouseX, int mouseY) {
-    slides[index]->mouseDragged(mouseX, mouseY);
+    return slides[index]->mouseDragged(mouseX, mouseY);
 }
 
 bool ofxPwrrPoint::mouseScrolled(float scrollX, float scrollY) {
-    slides[index]->mouseScrolled(scrollX, scrollY);
+    return slides[index]->mouseScrolled(scrollX, scrollY);
 }
 
 bool ofxPwrrPoint::mousePressed(int mouseX, int mouseY) {
-    slides[index]->mousePressed(mouseX, mouseY);
+    return slides[index]->mousePressed(mouseX, mouseY);
 }
 
 bool ofxPwrrPoint::keyPressed(int key) {
+    isKeyEvent = true;
+    this->key = key;
+}
+
+void ofxPwrrPoint::checkKeyEvents() {
+    if (!isKeyEvent) {
+        return;
+    }
+    
+    isKeyEvent = false;
+
     if (key == OF_KEY_LEFT) {
         prevSegment();
     }
