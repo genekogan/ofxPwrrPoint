@@ -154,7 +154,7 @@ public:
 
 class ofxPPSound : public ofxPPElement {
 public:
-    ofxPPSound(ofxPPSlide *parent, string name, string path, bool autoPlay, bool isLoop, float x, float y, float w);
+    ofxPPSound(ofxPPSlide *parent, string name, string path, ofTrueTypeFont & font, bool autoPlay, bool isLoop, float x, float y, float w, float h);
     
     void setup();
     void start();
@@ -185,6 +185,7 @@ public:
     void exportAssets() {exportAssets("");};
     
     ofSoundPlayer sound;
+    ofTrueTypeFont *font;
     string path;
     float pct, pctNext;
     ofRectangle rect;

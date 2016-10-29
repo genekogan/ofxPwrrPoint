@@ -20,7 +20,7 @@ public:
     ofxPPImage * addImage(string name_, string path, float x, float y, float w, float h);
     ofxPPScrollableImage * addScrollableImage(string name_, string path, float x, float y, float w, float h);
     ofxPPMovie * addMovie(string name_, string path, bool autoPlay, float x, float y, float w, float h);
-    ofxPPSound * addSound(string name_, string path, bool autoPlay, bool loop, float x, float y, float w);
+    ofxPPSound * addSound(string name_, string path, ofTrueTypeFont & font, bool autoPlay, bool loop, float x, float y, float w, float h);
     ofxPPText * addText(ofTrueTypeFont & font, ofColor textColor, string text, float x, float y, float w);
     void addAction(ofxPPElement *element);
     

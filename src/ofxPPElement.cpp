@@ -338,10 +338,11 @@ void ofxPPMovie::draw() {
 
 //////////////////////////////////////////////////////////////////////
 
-ofxPPSound::ofxPPSound(ofxPPSlide *parent, string name, string path, bool autoPlay, bool isLoop, float x, float y, float w) : ofxPPElement(parent, name, x, y, w, 0.2 * w) {
+ofxPPSound::ofxPPSound(ofxPPSlide *parent, string name, string path, ofTrueTypeFont & font, bool autoPlay, bool isLoop, float x, float y, float w, float h) : ofxPPElement(parent, name, x, y, w, h) {
     this->autoPlay = autoPlay;
     this->isLoop = isLoop;
     this->path = path;
+    this->font = &font;
     soundLoaded = false;
     isOverPBar = false;
     isOverSound = false;
@@ -467,6 +468,9 @@ void ofxPPSound::draw() {
     ofDrawRectangle(pBar);
     ofSetColor(0, 0, 255);
     ofDrawRectangle(pBar.getX(), pBar.getY(), pBar.getWidth()*pct, pBar.getHeight());
+
+    ofSetColor(255);
+    font->drawString(name, pBar.getX() + 0.05 * pBar.getWidth(), pBar.getY() + pBar.getHeight()*0.9);
     
     ofPopStyle();
     ofPopMatrix();
