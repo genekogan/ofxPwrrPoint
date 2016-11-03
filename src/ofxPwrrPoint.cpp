@@ -67,7 +67,22 @@ void ofxPwrrPoint::draw() {
     }
     ofNotifyEvent(drawE, slides[index], this);
     slides[index]->draw();
+    drawPointer();
     checkKeyEvents();
+}
+
+void ofxPwrrPoint::drawPointer() {
+    mouseSpeed = ofLerp(mouseSpeed, ofDist(mouseX, mouseY, ofGetMouseX(), ofGetMouseY()), 0.5);
+    mouseX = ofGetMouseX();
+    mouseY = ofGetMouseY();
+
+    ofPushMatrix();
+    ofPushStyle();
+    ofFill();
+    ofSetColor(20, 20, 255, ofGetFrameRate() < 2 ? 255 : 255*mouseSpeed);
+    ofDrawCircle(ofGetMouseX(), ofGetMouseY(), ofMap(sin(2.0*ofGetElapsedTimef()), -1, 1, 2, 4));
+    ofPopStyle();
+    ofPopMatrix();
 }
 
 ofxPPSlide * ofxPwrrPoint::addSlide(string name) {

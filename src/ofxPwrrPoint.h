@@ -23,6 +23,7 @@ public:
     
     void update();
     void draw();
+    void drawPointer();
     
     int getIndex() {return index;}
     int getNumSlides() {return slides.size();}
@@ -85,4 +86,7 @@ protected:
     
     bool isKeyEvent;
     int key;
+    
+    int mouseX, mouseY;
+    float mouseSpeed;
 };
