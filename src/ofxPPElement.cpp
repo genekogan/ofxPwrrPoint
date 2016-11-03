@@ -297,7 +297,7 @@ bool ofxPPMovie::mouseMoved(int x, int y) {
     float mx = x-box.getX();
     float my = y-box.getY();
     isOverPBar = pBar.inside(mx, my);
-    isOverMovie = box.inside(mx, my);
+    isOverMovie = rect.inside(mx, my);
     return isOverPBar;
 }
 
