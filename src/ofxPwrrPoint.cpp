@@ -6,10 +6,10 @@ ofxPwrrPoint::ofxPwrrPoint() {
     //setActive(true);
     exported = false;
     toExportSlides = false;
-    guiWindowWidth = 720;
+    guiWindowWidth = 1200;
     guiWindowHeight = 800;
     notesFontSize = 20;
-    notesFont.load("/Users/gene/Code/of_v0.9.0_osx_release/addons/ofxLibwebsockets/example_server_binary/bin/data/myriad.ttf", notesFontSize);
+    notesFont.load("/Users/gene/Code/of_v0.9.6_osx_release/apps/Performances/ML4ASlides/bin/data/myriad.ttf", notesFontSize);
     
     // mouse scroll can be done separately
    // ofAddListener(ofEvents().mouseScrolled, this, &ofxPwrrPoint::mouseScrolled);
@@ -246,6 +246,7 @@ void ofxPwrrPoint::setupGui() {
 }
 
 void ofxPwrrPoint::drawGui() {
+    ofSetColor(255);
     notesFont.drawString(notes[index], 10, 30);
 }
 

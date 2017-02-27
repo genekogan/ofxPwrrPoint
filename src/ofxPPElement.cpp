@@ -307,11 +307,16 @@ bool ofxPPMovie::mousePressed(int x, int y) {
         movie.setPosition(t);
     }
     else if (isOverMovie) {
-        if (movie.isPlaying()) {
-            movie.stop();
-        }
-        else {
-            movie.play();
+        cout << "key pressed " << ofGetKeyPressed(OF_KEY_SHIFT) << endl;
+        if (ofGetKeyPressed(OF_KEY_SHIFT)) {
+            movie.setPaused(!movie.isPaused());
+        } else {
+            if (movie.isPlaying()) {
+                movie.stop();
+            }
+            else {
+                movie.play();
+            }
         }
     }
     return isOverPBar;
