@@ -9,7 +9,7 @@ ofxPwrrPoint::ofxPwrrPoint() {
     guiWindowWidth = 1200;
     guiWindowHeight = 800;
     notesFontSize = 20;
-    notesFont.load("/Users/gene/Code/of_v0.9.6_osx_release/apps/Performances/ML4ASlides/bin/data/myriad.ttf", notesFontSize);
+	notesFont.load(ofToDataPath("myriad.ttf"), notesFontSize);
     
     // mouse scroll can be done separately
    // ofAddListener(ofEvents().mouseScrolled, this, &ofxPwrrPoint::mouseScrolled);
