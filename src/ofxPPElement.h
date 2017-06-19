@@ -57,11 +57,12 @@ public:
 
     void exportAssets(string prefix) {
         vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        string newPath = ofToDataPath(p[p.size()-1]);
         if (prefix != "") {
             newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
         }
         string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofLog() << cmd;
         ofSystem(cmd);
     }
     
@@ -89,11 +90,12 @@ public:
 
     void exportAssets(string prefix) {
         vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        string newPath = ofToDataPath(p[p.size()-1]);
         if (prefix != "") {
             newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
         }
         string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofLog() << cmd;
         ofSystem(cmd);
     }
     
@@ -128,11 +130,12 @@ public:
 
     void exportAssets(string prefix) {
         vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        string newPath = ofToDataPath(p[p.size()-1]);
         if (prefix != "") {
             newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
         }
         string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofLog() << cmd;
         ofSystem(cmd);
     }
     
@@ -174,11 +177,12 @@ public:
     
     void exportAssets(string prefix) {
         vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath("/"+p[p.size()-1]);
+        string newPath = ofToDataPath(p[p.size()-1]);
         if (prefix != "") {
             newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
         }
         string cmd = "cp \""+path+"\" \""+newPath+"\";";
+        ofLog() << cmd;
         ofSystem(cmd);
     }
     
