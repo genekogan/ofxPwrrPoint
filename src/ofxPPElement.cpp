@@ -22,6 +22,43 @@ void ofxPPElement::resize(ofRectangle content) {
     box.set(x_, y_, w_, h_);
 }
 
+string ofxPPElement::getRelativePath(string prefix, string path) {
+    vector<string> p = ofSplitString(path, "/");
+    for (int i=0; i<4; i++) {p.erase(p.begin());}
+    string currPath = p[0];
+    for (int i=1; i<p.size()-1; i++) {
+        currPath = currPath+"/"+p[i];
+    }
+    string newPath = ofToDataPath(currPath+"/"+p[p.size()-1]);
+    if (prefix != "") {
+        newPath = ofToDataPath(currPath+"/"+prefix+"_"+p[p.size()-1]);
+    }
+    return newPath;
+}
+
+void ofxPPElement::exportAssetsHelper(string prefix, string path) {
+    vector<string> p = ofSplitString(path, "/");
+    for (int i=0; i<4; i++) {p.erase(p.begin());}
+    string currPath = p[0];
+    string cmd = "mkdir "+ofToDataPath(currPath);
+    ofSystem(cmd);
+    for (int i=1; i<p.size()-1; i++) {
+        currPath = currPath+"/"+p[i];
+        string cmd = "mkdir "+ofToDataPath(currPath);
+        cmd = "mkdir "+ ofToDataPath(currPath);
+        ofSystem(cmd);
+    }
+    
+    string newPath = ofToDataPath(currPath+"/"+p[p.size()-1]);
+    if (prefix != "") {
+        newPath = ofToDataPath(currPath+"/"+prefix+"_"+p[p.size()-1]);
+    }
+    cmd = prefix + " cp \""+path+"\" \""+newPath+"\";";
+    
+    ofLog() << cmd;
+    ofSystem(cmd);
+}
+
 void ofxPPElement::draw() {
     ofPushMatrix();
     ofPushStyle();
@@ -82,8 +119,10 @@ ofxPPImage::ofxPPImage(ofxPPSlide *parent, string name, string path, float x, fl
 
 void ofxPPImage::setup() {
     if (exported) {
-        vector<string> p = ofSplitString(path, "/");
-        img.load(p[p.size()-1]);
+        //vector<string> p = ofSplitString(path, "/");
+        //img.load(p[p.size()-1]);
+        string expPath = getRelativePath("", path);
+        img.load(expPath);
     }
     else {
         img.load(path);
@@ -145,8 +184,10 @@ ofxPPScrollableImage::ofxPPScrollableImage(ofxPPSlide *parent, string name, stri
 
 void ofxPPScrollableImage::setup() {
     if (exported) {
-        vector<string> p = ofSplitString(path, "/");
-        img.setup(p[p.size()-1], box.getWidth(), box.getHeight());
+        //vector<string> p = ofSplitString(path, "/");
+        //img.setup(p[p.size()-1], box.getWidth(), box.getHeight());
+        string expPath = getRelativePath("", path);
+        img.setup(expPath, box.getWidth(), box.getHeight());
     }
     else {
         img.setup(path, box.getWidth(), box.getHeight());
@@ -164,7 +205,6 @@ bool ofxPPScrollableImage::mouseScrolled(float scrollX, float scrollY) {
     if (mouseOver) {
         scale = ofClamp(scale - 0.015 * scrollY, 0.5, maxScale);
     }
-	return mouseOver;
 }
 
 void ofxPPScrollableImage::start() {
@@ -215,8 +255,10 @@ ofxPPMovie::ofxPPMovie(ofxPPSlide *parent, string name, string path, bool autoPl
 void ofxPPMovie::setup() {
     if (!movieLoaded) {
         if (exported) {
-            vector<string> p = ofSplitString(path, "/");
-            movie.load(p[p.size()-1]);
+            //vector<string> p = ofSplitString(path, "/");
+            //movie.load(p[p.size()-1]);
+            string expPath = getRelativePath("", path);
+            movie.load(expPath);
         }
         else {
             movie.load(path);
@@ -359,8 +401,10 @@ ofxPPSound::ofxPPSound(ofxPPSlide *parent, string name, string path, ofTrueTypeF
 void ofxPPSound::setup() {
     if (!soundLoaded) {
         if (exported) {
-            vector<string> p = ofSplitString(path, "/");
-            sound.load(p[p.size()-1]);
+            //vector<string> p = ofSplitString(path, "/");
+            //sound.load(p[p.size()-1]);
+            string expPath = getRelativePath("", path);
+            sound.load(expPath);
         }
         else {
             sound.load(path);

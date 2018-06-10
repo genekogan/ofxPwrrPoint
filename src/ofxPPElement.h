@@ -16,6 +16,8 @@ public:
     virtual void update() {}
     virtual void draw();
     
+    string getRelativePath(string prefix, string path);
+    void exportAssetsHelper(string prefix, string path);
     virtual void exportAssets(string prefix) {}
     virtual void exportAssets() {}
     virtual void loadFromExported() {exported = true;}
@@ -56,14 +58,7 @@ public:
     void draw();
 
     void exportAssets(string prefix) {
-        vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath(p[p.size()-1]);
-        if (prefix != "") {
-            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
-        }
-        string cmd = "cp \""+path+"\" \""+newPath+"\";";
-        ofLog() << cmd;
-        ofSystem(cmd);
+        ofxPPElement::exportAssetsHelper(prefix, path);
     }
     
     void exportAssets() {exportAssets("");};
@@ -89,14 +84,7 @@ public:
     bool isScrollableImage() {return true;}
 
     void exportAssets(string prefix) {
-        vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath(p[p.size()-1]);
-        if (prefix != "") {
-            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
-        }
-        string cmd = "cp \""+path+"\" \""+newPath+"\";";
-        ofLog() << cmd;
-        ofSystem(cmd);
+        ofxPPElement::exportAssetsHelper(prefix, path);
     }
     
     void exportAssets() {exportAssets("");};
@@ -129,14 +117,7 @@ public:
     bool isVideo() {return true;}
 
     void exportAssets(string prefix) {
-        vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath(p[p.size()-1]);
-        if (prefix != "") {
-            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
-        }
-        string cmd = "cp \""+path+"\" \""+newPath+"\";";
-        ofLog() << cmd;
-        ofSystem(cmd);
+        ofxPPElement::exportAssetsHelper(prefix, path);
     }
     
     void exportAssets() {exportAssets("");};
@@ -176,14 +157,7 @@ public:
     bool isAudio() {return true;}
     
     void exportAssets(string prefix) {
-        vector<string> p = ofSplitString(path, "/");
-        string newPath = ofToDataPath(p[p.size()-1]);
-        if (prefix != "") {
-            newPath = ofToDataPath(prefix+"_"+p[p.size()-1]);
-        }
-        string cmd = "cp \""+path+"\" \""+newPath+"\";";
-        ofLog() << cmd;
-        ofSystem(cmd);
+        ofxPPElement::exportAssetsHelper(prefix, path);
     }
     
     void exportAssets() {exportAssets("");};
