@@ -119,6 +119,7 @@ bool ofxPPSlide::mouseMoved(int mouseX, int mouseY) {
     for (int i=0; i<elements.size(); i++) {
         elements[i]->mouseMoved(mouseX, mouseY);
     }
+	return mouse;
 }
 
 bool ofxPPSlide::mousePressed(int mouseX, int mouseY) {
@@ -129,6 +130,7 @@ bool ofxPPSlide::mousePressed(int mouseX, int mouseY) {
             mouse = true;
         }
     }
+	return mouse;
 }
 
 bool ofxPPSlide::mouseReleased(int mouseX, int mouseY) {

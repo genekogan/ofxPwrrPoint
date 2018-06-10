@@ -10,7 +10,7 @@ class ofxPPSlide {
 public:
     ofxPPSlide(string name);
     
-    bool loadFromExported() {exported = true;}
+    bool loadFromExported() {exported = true; return exported;}
     bool atBeginning() {return index == 0;}
     bool atEnd() {return index == breakpoints.size();}
     

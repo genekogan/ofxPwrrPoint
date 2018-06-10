@@ -145,6 +145,7 @@ bool ofxPwrrPoint::mousePressed(int mouseX, int mouseY) {
 bool ofxPwrrPoint::keyPressed(int key) {
     isKeyEvent = true;
     this->key = key;
+	return isKeyEvent;
 }
 
 void ofxPwrrPoint::checkKeyEvents() {
