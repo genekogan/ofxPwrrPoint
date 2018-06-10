@@ -3,7 +3,7 @@
 
 ofxPwrrPoint::ofxPwrrPoint() {
     index = 0;
-    //setActive(true);
+    setActive(true);
     exported = false;
     toExportSlides = false;
     guiWindowWidth = 1200;
@@ -12,7 +12,8 @@ ofxPwrrPoint::ofxPwrrPoint() {
 	notesFont.load(ofToDataPath("myriad.ttf"), notesFontSize);
     
     // mouse scroll can be done separately
-   // ofAddListener(ofEvents().mouseScrolled, this, &ofxPwrrPoint::mouseScrolled);
+    ofAddListener(ofEvents().mouseScrolled, this, &ofxPwrrPoint::mouseScrolled);
+    ofAddListener(ofEvents().windowResized, this, &ofxPwrrPoint::windowResized);
 }
 
 ofxPwrrPoint::~ofxPwrrPoint() {
@@ -194,7 +195,13 @@ void ofxPwrrPoint::keyPressed(ofKeyEventArgs &evt){
     keyPressed(evt.key);
 }
 
+void ofxPwrrPoint::windowResized(ofResizeEventArgs &evt) {
+    windowResized();
+}
+
 void ofxPwrrPoint::windowResized() {
+    //setContentRectangle(0, 0, ofGetWidth(), ofGetHeight());
+    setContentRectangle(20, 56, ofGetWidth()-40, ofGetHeight()-56);
     for (int i=0; i<slides.size(); i++) {
         slides[i]->resize(content);
     }

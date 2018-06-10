@@ -20,7 +20,6 @@ void ofApp::setup(){
     // text
     s1->addText(font, ofColor(0, 0, 150), "lorem ipsum", 0.0, 0.1, 0.5); // no height for text, just keeps wrapping
     
-
     // another slide
     ofxPPSlide *s2 = slideshow.addSlide("mouse = scroll, drag = zoom");
     s2->addScrollableImage("big image", "grid_flowers2.jpg", 0.1, 0.1, 0.8, 0.8);
@@ -82,7 +81,7 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-    slideshow.windowResized();
+    
 }
 
 //--------------------------------------------------------------

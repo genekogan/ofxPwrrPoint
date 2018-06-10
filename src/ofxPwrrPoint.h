@@ -69,6 +69,8 @@ protected:
     void mouseScrolled(ofMouseEventArgs &evt);
     void mouseReleased(ofMouseEventArgs &evt);
     void keyPressed(ofKeyEventArgs &evt);
+    void windowResized(ofResizeEventArgs &evt);
+    
     void checkKeyEvents();
     
     void exportScreenshotsSave();

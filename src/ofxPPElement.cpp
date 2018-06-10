@@ -163,6 +163,7 @@ void ofxPPScrollableImage::setup() {
 bool ofxPPScrollableImage::mouseScrolled(float scrollX, float scrollY) {
     if (mouseOver) {
         scale = ofClamp(scale - 0.015 * scrollY, 0.5, maxScale);
+        cout << scale << endl;
     }
 }
 
