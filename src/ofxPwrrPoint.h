@@ -13,7 +13,7 @@ public:
     ofxPwrrPoint();
     ~ofxPwrrPoint();
     
-    bool loadFromExported() {exported = true;}
+    bool loadFromExported() {exported = true; return exported;}
 
     void setActive(bool active);
     void setPage(int page);
